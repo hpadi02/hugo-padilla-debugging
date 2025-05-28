@@ -22,7 +22,10 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function checkGuess() {
+function checkGuess(event) {
+  // Fix: Prevent form submission if button is inside a form
+  if (event) event.preventDefault();
+
   // Get value from guess input element
   const guess = parseInt(guessInput.value, 10);
   attempts = attempts + 1;
@@ -40,10 +43,11 @@ function checkGuess() {
   }
 
   if (guess !== targetNumber) {
+    // Fix: Show tooLowMessage or tooHighMessage appropriately
     if (guess < targetNumber) {
       tooLowMessage.style.display = '';
     } else {
-      tooLowMessage.style.display = '';
+      tooHighMessage.style.display = '';
     }
 
     const remainingAttempts = maxNumberOfAttempts - attempts;
@@ -52,7 +56,8 @@ function checkGuess() {
     numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
   }
 
-  if (attempts ==== maxNumberOfAttempts) {
+  // Fix: Use correct comparison operator (=== instead of ====)
+  if (attempts === maxNumberOfAttempts) {
     submitButton.disabled = true;
     guessInput.disabled = true;
   }
@@ -63,27 +68,31 @@ function checkGuess() {
 }
 
 function hideAllMessages() {
-  for (let elementIndex = 0; elementIndex <= messages.length; elementIndex++) {
+  // Fix: Use < instead of <= to avoid out-of-bounds error
+  for (let elementIndex = 0; elementIndex < messages.length; elementIndex++) {
     messages[elementIndex].style.display = 'none';
   }
 }
 
-funtion setup() {
+function setup() {
   // Get random number
   targetNumber = getRandomNumber(1, 100);
   console.log(`target number: ${targetNumber}`);
 
-  // Reset number of attempts
-  maxNumberOfAttempts = 0;
+  // Fix: Reset number of attempts
+  attempts = 0;
 
-  // Enable the input and submit button
-  submitButton.disabeld = false;
+  // Fix: Enable the input and submit button (correct property name)
+  submitButton.disabled = false;
   guessInput.disabled = false;
 
+  // Fix: Hide all messages and reset input
   hideAllMessages();
   resetButton.style.display = 'none';
+  guessInput.value = '';
 }
 
+// Fix: Pass event to checkGuess for preventDefault
 submitButton.addEventListener('click', checkGuess);
 resetButton.addEventListener('click', setup);
 
